@@ -3,7 +3,8 @@ Description=TestSuite Service
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/TestSuite
+WorkingDirectory=/usr/local/bin/TestSuite
+ExecStart=/usr/local/bin/TestSuite/TestSuite
 Restart=always
 RestartSec=5
 User=root

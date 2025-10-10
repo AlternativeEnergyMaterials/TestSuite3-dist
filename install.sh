@@ -2,21 +2,24 @@
 set -e
 
 APP_NAME="TestSuite"
-BIN_SRC="./$APP_NAME"
-BIN_DEST="/usr/local/bin/$APP_NAME"
+APP_DIR="./$APP_NAME"                  # the folder containing the binary
+BIN_SRC="$APP_DIR/$APP_NAME"           # actual binary inside folder
+INSTALL_DIR="/usr/local/bin/$APP_NAME" # install destination (entire folder)
 SERVICE_SRC="./$APP_NAME.service"
 SERVICE_DEST="/etc/systemd/system/$APP_NAME.service"
 
 echo "Installing $APP_NAME..."
 
-# Copy binary
-if [ -f "$BIN_DEST" ]; then
-    echo "Updating existing binary..."
+# Copy entire folder (including _internal etc.)
+if [ -d "$INSTALL_DIR" ]; then
+    echo "Updating existing installation..."
+    sudo rm -rf "$INSTALL_DIR"
 else
-    echo "Installing new binary..."
+    echo "Installing new binary directory..."
 fi
-sudo cp "$BIN_SRC" "$BIN_DEST"
-sudo chmod +x "$BIN_DEST"
+sudo mkdir -p "$INSTALL_DIR"
+sudo cp -r "$APP_DIR"/* "$INSTALL_DIR/"
+sudo chmod +x "$INSTALL_DIR/$APP_NAME"
 
 # Copy systemd service
 if [ -f "$SERVICE_DEST" ]; then
